@@ -43,7 +43,7 @@ export default async function ChatPage() {
     } else {
       const { data: newConv } = await supabase
         .from('conversations')
-        .insert({})
+        .insert({} as any)
         .select()
         .single() as any
       if (!newConv) redirect('/error?error=Failed+to+create+conversation')
