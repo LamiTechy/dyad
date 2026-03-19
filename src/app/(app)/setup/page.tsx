@@ -29,7 +29,7 @@ export default function SetupPage() {
         .select('*')
         .eq('id', user.id)
         .single()
-        .then(({ data }) => {
+        .then(({ data }: any) => {
           if (data) {
             setDisplayName(data.display_name ?? '')
             setAbout(data.about ?? '')
