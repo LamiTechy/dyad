@@ -32,7 +32,7 @@ export default async function ChatPage() {
       .from('conversations')
       .select('id')
       .limit(1)
-      .maybeSingle()
+      .maybeSingle() as any
 
     if (existingConv) {
       await supabase.from('conversation_members').insert([{
@@ -45,13 +45,13 @@ export default async function ChatPage() {
         .from('conversations')
         .insert({})
         .select()
-        .single()
+        .single() as any
       if (!newConv) redirect('/error?error=Failed+to+create+conversation')
       await supabase.from('conversation_members').insert([{
-        conversation_id: newConv!.id,
+        conversation_id: newConv.id,
         user_id: user.id,
       }] as any)
-      conversationId = newConv!.id
+      conversationId = newConv.id
     }
   } else {
     conversationId = membership.conversation_id
