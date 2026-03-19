@@ -23,7 +23,7 @@ export default async function ChatPage() {
     .from('conversation_members')
     .select('conversation_id')
     .eq('user_id', user.id)
-    .maybeSingle()
+    .maybeSingle() as any
 
   let conversationId: string
 
@@ -62,7 +62,7 @@ export default async function ChatPage() {
     .from('profiles')
     .select('*')
     .eq('id', user.id)
-    .maybeSingle()
+    .maybeSingle() as any
 
   // Get peer user_id from conversation_members
   const { data: peerMember } = await supabase
@@ -70,7 +70,7 @@ export default async function ChatPage() {
     .select('user_id')
     .eq('conversation_id', conversationId)
     .neq('user_id', user.id)
-    .maybeSingle()
+    .maybeSingle() as any
 
   // Fetch peer profile separately
   const { data: peerProfile } = peerMember
@@ -78,7 +78,7 @@ export default async function ChatPage() {
         .from('profiles')
         .select('id, display_name, avatar_url, is_online, last_seen_at')
         .eq('id', peerMember.user_id)
-        .maybeSingle()
+        .maybeSingle() as any
     : { data: null }
 
   // Fetch peer device keys for E2EE
@@ -89,7 +89,7 @@ export default async function ChatPage() {
         .eq('user_id', peerMember.user_id)
         .eq('is_current', true)
         .order('created_at', { ascending: false })
-        .limit(1)
+        .limit(1) as any
     : { data: null }
 
   const finalProfile = myProfile ?? {
