@@ -16,7 +16,7 @@ export default async function ChatPage() {
     .eq('is_active', true)
     .maybeSingle()
 
-  if (!allowed) redirect('/unauthorized')
+  if (!allowed) redirect('/login')
 
   // Get conversation membership
   const { data: membership } = await supabase
