@@ -357,17 +357,19 @@ export function ChatShell({
         </div>
       )}
 
-      {/* Composer */}
-      <MessageComposer
-        conversationId={conversationId}
-        myUserId={myUserId}
-        myDeviceId={myDeviceId}
-        peerPublicKeyJwk={peerPublicKeyJwk}
-        editingMessage={editingMessage}
-        onSend={editingMessage ? handleEdit : handleSend}
-        onTyping={broadcastTyping}
-        isSending={isSending}
-      />
+      {/* Composer - hidden during calls */}
+      {(callUI.state === 'idle' || callUI.state === 'ended') && (
+        <MessageComposer
+          conversationId={conversationId}
+          myUserId={myUserId}
+          myDeviceId={myDeviceId}
+          peerPublicKeyJwk={peerPublicKeyJwk}
+          editingMessage={editingMessage}
+          onSend={editingMessage ? handleEdit : handleSend}
+          onTyping={broadcastTyping}
+          isSending={isSending}
+        />
+      )}
 
       {/* Call overlay */}
       {callUI.state !== 'idle' && callUI.state !== 'ended' && (
