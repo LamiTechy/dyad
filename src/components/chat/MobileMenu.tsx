@@ -49,10 +49,10 @@ export function MobileMenu({
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-neutral-900 border border-neutral-800 rounded-lg shadow-2xl z-[9999]">
+        <div className="absolute right-0 mt-2 w-48 bg-black/95 border border-pink-500/20 rounded-lg shadow-2xl z-[9999] overflow-hidden backdrop-blur">
           <button
             onClick={() => handleMenuItemClick(onSearchOpen)}
-            className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors first:rounded-t-lg"
+            className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors border-b border-neutral-800/50"
             title="Search messages"
           >
             <SearchIcon size={18} color="currentColor" />
@@ -62,7 +62,7 @@ export function MobileMenu({
           {onWallpaperOpen && (
             <button
               onClick={() => handleMenuItemClick(onWallpaperOpen)}
-              className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors"
+              className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors border-b border-neutral-800/50"
               title="Set wallpaper"
             >
               <PictureIcon size={18} color="currentColor" />
@@ -73,7 +73,7 @@ export function MobileMenu({
           {onLockSettingsOpen && (
             <button
               onClick={() => handleMenuItemClick(onLockSettingsOpen)}
-              className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors"
+              className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors border-b border-neutral-800/50"
               title="Lock settings"
             >
               <LockIcon size={18} color="currentColor" />
@@ -84,7 +84,7 @@ export function MobileMenu({
           <Link
             href="/setup"
             onClick={() => setIsOpen(false)}
-            className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors last:rounded-b-lg"
+            className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors"
             title="Settings"
           >
             <SettingsIcon size={18} color="currentColor" />
