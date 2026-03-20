@@ -85,7 +85,7 @@ export default function SetupPage() {
 
       const { error: updateError } = await supabase
         .from('profiles')
-        .update(updateData)
+        .update(updateData as any)
         .eq('id', userId)
 
       if (updateError) throw updateError
