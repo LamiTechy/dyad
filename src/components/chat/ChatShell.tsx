@@ -40,6 +40,7 @@ export function ChatShell({
   const [myDeviceId, setMyDeviceId] = useState<string>('')
   const [peerPublicKeyJwk, setPeerPublicKeyJwk] = useState<JsonWebKey | null>(initialPeerKeyJwk)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isLockSettingsOpen, setIsLockSettingsOpen] = useState(false)
   const [replyTo, setReplyTo] = useState<RichMessage | null>(null)
   const [editingMessage, setEditingMessage] = useState<RichMessage | null>(null)
   const [e2eeReady, setE2eeReady] = useState(false)
@@ -298,6 +299,7 @@ export function ChatShell({
         onVoiceCall={() => initiateCall('voice')}
         onWallpaperOpen={() => setShowWallpaperPicker(true)}
         onVideoCall={() => initiateCall('video')}
+        onLockSettingsOpen={() => setIsLockSettingsOpen(true)}
       />
 
       {/* Pinned messages */}
