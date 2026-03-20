@@ -9,6 +9,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { useMessages } from '@/hooks/useMessages'
 import { usePresence, useCall } from '@/hooks/usePresence'
 import { useCallLogs } from '@/hooks/useCallLogs'
+import { useLockScreen } from '@/hooks/useLockScreen'
 import { getOrCreateDeviceId, generateIdentityKeyPair } from '@/lib/crypto/e2ee'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { MessageList } from './MessageList'
@@ -19,6 +20,7 @@ import { IncomingCallToast } from './IncomingCallToast'
 import { SearchPanel } from './SearchPanel'
 import { PinnedMessageBanner } from './PinnedMessageBanner'
 import { WallpaperPicker } from './WallpaperPicker'
+import { LockSettingsModal } from '@/components/LockSettingsModal'
 import type { Profile, RichMessage } from '@/types/database'
 
 interface ChatShellProps {
@@ -37,6 +39,7 @@ export function ChatShell({
   peerDeviceKeyJwk: initialPeerKeyJwk,
 }: ChatShellProps) {
   const supabase = getSupabaseBrowserClient()
+  const { isLockEnabled, setLock } = useLockScreen()
   const [myDeviceId, setMyDeviceId] = useState<string>('')
   const [peerPublicKeyJwk, setPeerPublicKeyJwk] = useState<JsonWebKey | null>(initialPeerKeyJwk)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -406,6 +409,23 @@ export function ChatShell({
         <SearchPanel
           conversationId={conversationId}
           onClose={() => setIsSearchOpen(false)}
+        />
+      )}
+
+      {/* Lock settings modal */}
+      {isLockSettingsOpen && (
+        <LockSettingsModal
+          isOpen={isLockSettingsOpen}
+          isEnabled={isLockEnabled}
+          onClose={() => setIsLockSettingsOpen(false)}
+          onEnable={(pin) => {
+            setLock(pin, true)
+            setIsLockSettingsOpen(false)
+          }}
+          onDisable={() => {
+            setLock('', false)
+            setIsLockSettingsOpen(false)
+          }}
         />
       )}
     </div>
