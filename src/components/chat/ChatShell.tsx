@@ -66,7 +66,7 @@ export function ChatShell({
       if (!existing) {
         // Generate and publish new keypair
         const { publicKeyJwk, fingerprint } = await generateIdentityKeyPair(deviceId)
-        await supabase.from('device_keys').upsert({
+        await (supabase as any).from('device_keys').upsert({
           user_id: myUserId,
           device_id: deviceId,
           identity_public_key: publicKeyJwk,
@@ -218,13 +218,13 @@ export function ChatShell({
   const [pinnedMessages, setPinnedMessages] = useState<RichMessage[]>([])
 
   const fetchPinned = async () => {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from('pinned_messages')
       .select('message_id, messages_with_sender(*)')
       .eq('conversation_id', conversationId)
       .order('pinned_at', { ascending: false })
     if (data) {
-      setPinnedMessages(data.map(d => d.messages_with_sender as unknown as RichMessage).filter(Boolean))
+      setPinnedMessages(data.map((d: any) => d.messages_with_sender as unknown as RichMessage).filter(Boolean))
     }
   }
 
@@ -259,8 +259,8 @@ export function ChatShell({
 
   useEffect(() => {
     // Fetch initial wallpaper
-    supabase.from('conversations').select('wallpaper_url').eq('id', conversationId).single()
-      .then(({ data }) => { if (data?.wallpaper_url) setWallpaper(data.wallpaper_url) })
+    (supabase as any).from('conversations').select('wallpaper_url').eq('id', conversationId).single()
+      .then(({ data }: any) => { if (data?.wallpaper_url) setWallpaper(data.wallpaper_url) })
 
     // Subscribe to wallpaper changes
     const channel = supabase.channel(`wallpaper:${conversationId}`)

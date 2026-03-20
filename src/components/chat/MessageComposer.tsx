@@ -98,7 +98,7 @@ export function MessageComposer({ conversationId, myUserId, editingMessage, onSe
         if (file.type.startsWith('image/')) type = 'image'
         else if (file.type.startsWith('video/')) type = 'video'
         else if (file.type.startsWith('audio/')) type = 'audio'
-        const { data: msg, error: msgErr } = await supabase.from('messages').insert({
+        const { data: msg, error: msgErr } = await (supabase as any).from('messages').insert({
           client_id: crypto.randomUUID(),
           conversation_id: conversationId,
           sender_id: myUserId,
@@ -107,7 +107,7 @@ export function MessageComposer({ conversationId, myUserId, editingMessage, onSe
           status: 'sent',
         }).select().single()
         if (msgErr) throw msgErr
-        await supabase.from('attachments').insert({
+        await (supabase as any).from('attachments').insert({
           message_id: msg.id,
           conversation_id: conversationId,
           uploader_id: myUserId,
@@ -156,7 +156,7 @@ export function MessageComposer({ conversationId, myUserId, editingMessage, onSe
         const path = `${myUserId}/${conversationId}/${crypto.randomUUID()}.webm`
         const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, blob, { contentType: 'audio/webm' })
         if (upErr) throw upErr
-        const { data: msg, error: msgErr } = await supabase.from('messages').insert({
+        const { data: msg, error: msgErr } = await (supabase as any).from('messages').insert({
           client_id: crypto.randomUUID(),
           conversation_id: conversationId,
           sender_id: myUserId,
@@ -165,7 +165,7 @@ export function MessageComposer({ conversationId, myUserId, editingMessage, onSe
           status: 'sent',
         }).select().single()
         if (msgErr) throw msgErr
-        await supabase.from('attachments').insert({
+        await (supabase as any).from('attachments').insert({
           message_id: msg.id,
           conversation_id: conversationId,
           uploader_id: myUserId,

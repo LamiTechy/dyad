@@ -209,9 +209,9 @@ export async function decryptMessage(
   const ciphertext = base64urlToBuffer(payload.ciphertext)
 
   const plaintextBuffer = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv },
+    { name: 'AES-GCM', iv: iv as any },
     aesKey,
-    ciphertext
+    ciphertext as any
   )
 
   return new TextDecoder().decode(plaintextBuffer)
@@ -287,9 +287,9 @@ export async function decryptFile(
 
   // Decrypt the file
   return crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: base64urlToBuffer(iv) },
+    { name: 'AES-GCM', iv: base64urlToBuffer(iv) as any },
     fileKey,
-    encryptedBuffer
+    encryptedBuffer as any
   )
 }
 

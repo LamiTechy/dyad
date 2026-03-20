@@ -22,7 +22,7 @@ interface UseMessagesOptions {
   conversationId: string
   myUserId: string
   myDeviceId: string
-  peerPublicKeyJwk: import('globalThis').JsonWebKey | null
+  peerPublicKeyJwk: JsonWebKey | null
 }
 
 export function useMessages({
@@ -54,7 +54,7 @@ export function useMessages({
       const { data, error } = await query
       if (error) throw error
 
-      const messages = (data ?? []).map(m => ({
+      const messages = ((data as any) ?? []).map((m: any) => ({
         ...m,
         decrypted_body: m.body_plaintext,
         reactions: (m as RichMessage).reactions ?? [],
@@ -63,7 +63,7 @@ export function useMessages({
       return {
         messages: messages.reverse(),
         nextCursor: data && data.length === PAGE_SIZE
-          ? data[data.length - 1].created_at
+          ? (data as any)[data.length - 1].created_at
           : null,
       }
     },
@@ -111,7 +111,7 @@ export function useMessages({
             .single()
 
           if (data) {
-            const msg = { ...data, decrypted_body: data.body_plaintext, reactions: [] } as RichMessage
+            const msg = { ...(data as any), decrypted_body: (data as any).body_plaintext, reactions: [] } as RichMessage
             queryClient.setQueryData(queryKey, (old: { pages: { messages: RichMessage[] }[] } | undefined) => {
               if (!old) return old
               const pages = [...old.pages]
@@ -203,7 +203,7 @@ export function useMessages({
     mutationFn: async (params: SendMessageParams) => {
       const clientId = crypto.randomUUID()
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('messages')
         .insert({
           client_id: clientId,
@@ -218,7 +218,7 @@ export function useMessages({
         .single()
 
       if (error) throw error
-      return { ...data, decrypted_body: params.body, reactions: [] } as RichMessage
+      return { ...(data as any), decrypted_body: params.body, reactions: [] } as RichMessage
     },
 
     onMutate: async (params) => {
@@ -298,7 +298,7 @@ export function useMessages({
   // Edit message
   const editMutation = useMutation({
     mutationFn: async ({ messageId, newBody }: { messageId: string; newBody: string }) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('messages')
         .update({
           body_plaintext: newBody,
@@ -317,7 +317,7 @@ export function useMessages({
   const deleteMutation = useMutation({
     mutationFn: async ({ messageId, forEveryone }: { messageId: string; forEveryone: boolean }) => {
       if (forEveryone) {
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('messages')
           .update({
             deleted_for_everyone: true,
@@ -352,14 +352,14 @@ export function useMessages({
       if (existing) {
         await supabase.from('reactions').delete().eq('id', existing.id)
       } else {
-        await supabase.from('reactions').insert({ message_id: messageId, user_id: myUserId, emoji })
+        await (supabase as any).from('reactions').insert({ message_id: messageId, user_id: myUserId, emoji })
       }
       queryClient.invalidateQueries({ queryKey })
     },
   })
 
   const markDelivered = useCallback(async (messageId: string) => {
-    await supabase.from('message_receipts').upsert({
+    await (supabase as any).from('message_receipts').upsert({
       message_id: messageId,
       user_id: myUserId,
       delivered_at: new Date().toISOString(),
@@ -367,14 +367,14 @@ export function useMessages({
   }, [supabase, myUserId])
 
   const markSeen = useCallback(async (messageId: string) => {
-    await supabase.from('message_receipts').upsert({
+    await (supabase as any).from('message_receipts').upsert({
       message_id: messageId,
       user_id: myUserId,
       delivered_at: new Date().toISOString(),
       seen_at: new Date().toISOString(),
     }, { onConflict: 'message_id,user_id' })
 
-    await supabase
+    await (supabase as any)
       .from('conversation_members')
       .update({ last_read_message_id: messageId, last_read_at: new Date().toISOString() })
       .eq('conversation_id', conversationId)
@@ -384,7 +384,7 @@ export function useMessages({
   const pinMutation = useMutation({
     mutationFn: async (messageId: string) => {
       // Check if already pinned — if so, unpin it
-      const { data: existing } = await supabase
+      const { data: existing } = await (supabase as any)
         .from('pinned_messages')
         .select('id')
         .eq('conversation_id', conversationId)
@@ -394,7 +394,7 @@ export function useMessages({
       if (existing) {
         await supabase.from('pinned_messages').delete().eq('id', existing.id)
       } else {
-        await supabase.from('pinned_messages').insert({
+        await (supabase as any).from('pinned_messages').insert({
           conversation_id: conversationId,
           message_id: messageId,
           pinned_by: myUserId,

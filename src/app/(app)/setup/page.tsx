@@ -83,9 +83,9 @@ export default function SetupPage() {
       }
       if (avatar_url) updateData.avatar_url = avatar_url
 
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('profiles')
-        .update(updateData as any)
+        .update(updateData)
         .eq('id', userId)
 
       if (updateError) throw updateError

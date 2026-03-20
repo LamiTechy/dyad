@@ -31,7 +31,7 @@ export function WallpaperPicker({ conversationId, myUserId, currentWallpaper, on
   const applyWallpaper = async (wallpaper: string | null) => {
     setSelected(wallpaper)
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('conversations')
         .update({
           wallpaper_url: wallpaper,

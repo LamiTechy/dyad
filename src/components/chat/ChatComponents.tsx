@@ -126,7 +126,7 @@ export function ChatHeader({
           🔍
         </button>
         <Link
-          href="/settings"
+          href="/setup"
           className="p-2 text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 rounded-full transition-colors"
           title="Settings"
         >
@@ -207,7 +207,7 @@ export function CallOverlay({
             <div className="text-center">
               <h2 className="text-xl font-semibold text-white">{peerProfile?.display_name ?? '...'}</h2>
               <p className="text-neutral-400 mt-1">
-                {callUI.state === 'ringing' && (callUI.callUI?.incomingCallEvent ? 'Incoming call...' : 'Ringing...')}
+                {callUI.state === 'ringing' && (callUI.incomingCallEvent ? 'Incoming call...' : 'Ringing...')}
                 {callUI.state === 'initiating' && 'Calling...'}
                 {callUI.state === 'connecting' && 'Connecting...'}
                 {callUI.state === 'reconnecting' && 'Reconnecting...'}
@@ -325,7 +325,6 @@ export function IncomingCallToast({ peerName, callType, onAccept, onReject }: In
 
 import { useState, useRef } from 'react'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
-import { format } from 'date-fns'
 
 interface SearchPanelProps {
   conversationId: string

@@ -70,11 +70,11 @@ export function usePresence({
           })
 
           // Update profile online status
-          await supabase
+          await (supabase as any)
             .from('profiles')
             .update({ is_online: true, last_seen_at: new Date().toISOString() })
             .eq('id', myUserId)
-            .then(({ error }) => {
+            .then(({ error }: any) => {
               if (error) console.error('[Presence] Failed to update online status:', error)
             })
         }
@@ -84,8 +84,8 @@ export function usePresence({
 
     // Mark offline on unload
     const handleUnload = () => {
-      channel.untrack()
-      supabase.from('profiles').update({ is_online: false, last_seen_at: new Date().toISOString() }).eq('id', myUserId)
+      channel.untrack();
+      (supabase as any).from('profiles').update({ is_online: false, last_seen_at: new Date().toISOString() }).eq('id', myUserId)
     }
     window.addEventListener('beforeunload', handleUnload)
 
@@ -266,7 +266,7 @@ export function useCall({
 
   const initiateCall = async (callType: CallType) => {
     // Create call session in DB
-    const { data: callSession } = await supabase
+    const { data: callSession } = await (supabase as any)
       .from('call_sessions')
       .insert({
         conversation_id: conversationId,
@@ -305,7 +305,7 @@ export function useCall({
     if (localStream) updateUI({ localStream, incomingCallEvent: null })
 
     // Update DB
-    await supabase
+    await (supabase as any)
       .from('call_sessions')
       .update({ status: 'active', answered_at: new Date().toISOString() })
       .eq('id', incomingCallEvent.call_id)
@@ -315,7 +315,7 @@ export function useCall({
     if (!callUI.callId || !callUI.incomingCallEvent) return
     await serviceRef.current?.rejectCall(callUI.callId)
 
-    await supabase
+    await (supabase as any)
       .from('call_sessions')
       .update({ status: 'rejected', ended_at: new Date().toISOString() })
       .eq('id', callUI.callId)
@@ -326,7 +326,7 @@ export function useCall({
   const endCall = async () => {
     await serviceRef.current?.endCall()
     if (callUI.callId) {
-      await supabase
+      await (supabase as any)
         .from('call_sessions')
         .update({ status: 'ended', ended_at: new Date().toISOString() })
         .eq('id', callUI.callId)

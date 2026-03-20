@@ -83,7 +83,7 @@ export function ChatHeader({
       .select('display_name, avatar_url, is_online, last_seen_at')
       .eq('id', peerUserId)
       .single()
-      .then(({ data }) => {
+      .then(({ data }: any) => {
         if (data) {
           setPeerProfile({ display_name: data.display_name, avatar_url: data.avatar_url })
           setIsOnline(data.is_online)
@@ -123,7 +123,7 @@ export function ChatHeader({
         .select('is_online, last_seen_at, display_name, avatar_url')
         .eq('id', peerUserId)
         .single()
-        .then(({ data }) => {
+        .then(({ data }: any) => {
           if (data) {
             setIsOnline(data.is_online)
             setLastSeen(data.last_seen_at)
