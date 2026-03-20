@@ -47,48 +47,48 @@ export function MobileMenu({
         {isOpen ? <X size={20} color="currentColor" /> : <MenuIcon size={20} color="currentColor" />}
       </button>
 
-      {/* Dropdown menu - using fixed positioning to ensure it stays on top */}
+      {/* Dropdown menu - context menu style */}
       {isOpen && (
-        <div className="fixed right-4 top-16 w-48 bg-black/95 border border-pink-500/20 rounded-lg shadow-2xl z-[99999] overflow-hidden backdrop-blur">
+        <div className="fixed right-4 top-16 w-40 bg-neutral-950 border border-neutral-700 rounded-md shadow-xl z-[99999] overflow-hidden">
           <button
             onClick={() => handleMenuItemClick(onSearchOpen)}
-            className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors border-b border-neutral-800/50"
+            className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs"
             title="Search messages"
           >
-            <SearchIcon size={18} color="currentColor" />
-            <span className="text-sm font-medium">Search</span>
+            <SearchIcon size={16} color="currentColor" />
+            <span className="font-normal">Search</span>
           </button>
 
           {onWallpaperOpen && (
             <button
               onClick={() => handleMenuItemClick(onWallpaperOpen)}
-              className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors border-b border-neutral-800/50"
+              className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs border-t border-neutral-800"
               title="Set wallpaper"
             >
-              <PictureIcon size={18} color="currentColor" />
-              <span className="text-sm font-medium">Wallpaper</span>
+              <PictureIcon size={16} color="currentColor" />
+              <span className="font-normal">Wallpaper</span>
             </button>
           )}
 
           {onLockSettingsOpen && (
             <button
               onClick={() => handleMenuItemClick(onLockSettingsOpen)}
-              className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors border-b border-neutral-800/50"
+              className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs border-t border-neutral-800"
               title="Lock settings"
             >
-              <LockIcon size={18} color="currentColor" />
-              <span className="text-sm font-medium">Lock</span>
+              <LockIcon size={16} color="currentColor" />
+              <span className="font-normal">Lock</span>
             </button>
           )}
 
           <Link
             href="/setup"
             onClick={() => setIsOpen(false)}
-            className="w-full px-4 py-3 text-left text-neutral-200 hover:bg-pink-500/10 hover:text-pink-300 flex items-center gap-3 transition-colors"
+            className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs border-t border-neutral-800"
             title="Settings"
           >
-            <SettingsIcon size={18} color="currentColor" />
-            <span className="text-sm font-medium">Settings</span>
+            <SettingsIcon size={16} color="currentColor" />
+            <span className="font-normal">Settings</span>
           </Link>
         </div>
       )}
