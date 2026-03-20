@@ -1,0 +1,97 @@
+'use client'
+
+import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+import { MenuIcon, X, SearchIcon, PictureIcon, LockIcon, SettingsIcon } from '@/components/ui/Icons'
+
+interface MobileMenuProps {
+  onSearchOpen: () => void
+  onWallpaperOpen?: () => void
+  onLockSettingsOpen?: () => void
+}
+
+export function MobileMenu({
+  onSearchOpen,
+  onWallpaperOpen,
+  onLockSettingsOpen,
+}: MobileMenuProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
+  const handleMenuItemClick = (callback: () => void) => {
+    callback()
+    setIsOpen(false)
+  }
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
+        title="Menu"
+      >
+        {isOpen ? <X size={20} color="currentColor" /> : <MenuIcon size={20} color="currentColor" />}
+      </button>
+
+      {/* Dropdown menu */}
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-neutral-900 border border-neutral-800 rounded-lg shadow-lg z-50">
+          <button
+            onClick={() => handleMenuItemClick(onSearchOpen)}
+            className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors first:rounded-t-lg"
+            title="Search messages"
+          >
+            <SearchIcon size={18} color="currentColor" />
+            <span className="text-sm font-medium">Search</span>
+          </button>
+
+          {onWallpaperOpen && (
+            <button
+              onClick={() => handleMenuItemClick(onWallpaperOpen)}
+              className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors"
+              title="Set wallpaper"
+            >
+              <PictureIcon size={18} color="currentColor" />
+              <span className="text-sm font-medium">Wallpaper</span>
+            </button>
+          )}
+
+          {onLockSettingsOpen && (
+            <button
+              onClick={() => handleMenuItemClick(onLockSettingsOpen)}
+              className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors"
+              title="Lock settings"
+            >
+              <LockIcon size={18} color="currentColor" />
+              <span className="text-sm font-medium">Lock</span>
+            </button>
+          )}
+
+          <Link
+            href="/setup"
+            onClick={() => setIsOpen(false)}
+            className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors last:rounded-b-lg"
+            title="Settings"
+          >
+            <SettingsIcon size={18} color="currentColor" />
+            <span className="text-sm font-medium">Settings</span>
+          </Link>
+        </div>
+      )}
+    </div>
+  )
+}
