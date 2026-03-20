@@ -19,7 +19,6 @@ interface ChatHeaderProps {
   onVoiceCall: () => void
   onVideoCall: () => void
   onWallpaperOpen?: () => void
-  onLockSettingsOpen?: () => void
 }
 
 export function Avatar({
@@ -69,7 +68,8 @@ export function ChatHeader({
   onSearchOpen,
   onVoiceCall,
   onVideoCall,
-  onWallpaperOpen,  onLockSettingsOpen,}: ChatHeaderProps) {
+  onWallpaperOpen,
+}: ChatHeaderProps) {
   const supabase = getSupabaseBrowserClient()
   const [peerProfile, setPeerProfile] = useState(initialPeerProfile)
   const [isOnline, setIsOnline] = useState(false)
@@ -229,15 +229,6 @@ export function ChatHeader({
               <PictureIcon size={20} color="currentColor" />
             </button>
           )}
-          {onLockSettingsOpen && (
-            <button
-              onClick={onLockSettingsOpen}
-              className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
-              title="Lock settings"
-            >
-              <LockIcon size={20} color="currentColor" />
-            </button>
-          )}
           <Link
             href="/setup"
             className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
@@ -252,7 +243,6 @@ export function ChatHeader({
           <MobileMenu
             onSearchOpen={onSearchOpen}
             onWallpaperOpen={onWallpaperOpen}
-            onLockSettingsOpen={onLockSettingsOpen}
           />
         </div>
       </div>
