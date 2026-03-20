@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { Avatar } from './ChatHeader'
 import { PhoneIcon, MicrophoneIcon, MicrophoneOffIcon, VideoIcon, CameraOffIcon, HangupIcon, X } from '@/components/ui/Icons'
 import type { CallUI } from '@/hooks/usePresence'
@@ -32,15 +33,33 @@ export function CallOverlay({
   onToggleMute,
   onToggleCamera,
 }: CallOverlayProps) {
-  const localVideoRef = (el: HTMLVideoElement | null) => {
-    if (el && callUI.localStream) el.srcObject = callUI.localStream
-  }
-  const remoteVideoRef = (el: HTMLVideoElement | null) => {
-    if (el && callUI.remoteStream) el.srcObject = callUI.remoteStream
-  }
-  const remoteAudioRef = (el: HTMLAudioElement | null) => {
-    if (el && callUI.remoteStream) el.srcObject = callUI.remoteStream
-  }
+  const localVideoRef = useRef<HTMLVideoElement>(null)
+  const remoteVideoRef = useRef<HTMLVideoElement>(null)
+  const remoteAudioRef = useRef<HTMLAudioElement>(null)
+
+  // Attach local stream to video element whenever it changes
+  useEffect(() => {
+    const video = localVideoRef.current
+    if (video && callUI.localStream) {
+      video.srcObject = callUI.localStream
+    }
+  }, [callUI.localStream])
+
+  // Attach remote stream to video element whenever it changes
+  useEffect(() => {
+    const video = remoteVideoRef.current
+    if (video && callUI.remoteStream) {
+      video.srcObject = callUI.remoteStream
+    }
+  }, [callUI.remoteStream])
+
+  // Attach remote stream to audio element for voice calls
+  useEffect(() => {
+    const audio = remoteAudioRef.current
+    if (audio && callUI.remoteStream) {
+      audio.srcObject = callUI.remoteStream
+    }
+  }, [callUI.remoteStream])
 
   const isVideo = callUI.callType === 'video'
   const isActive = callUI.state === 'active'
@@ -60,11 +79,18 @@ export function CallOverlay({
 
   return (
     <div className="fixed inset-0 z-40 bg-neutral-950 flex flex-col">
-      {isVideo && callUI.remoteStream && (
-        <video ref={remoteVideoRef} autoPlay playsInline className="absolute inset-0 w-full h-full object-cover" />
+      {/* Remote video - always render if video call to prevent unmount/remount flicker */}
+      {isVideo && (
+        <video 
+          ref={remoteVideoRef} 
+          autoPlay 
+          playsInline 
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity ${callUI.remoteStream ? 'opacity-100' : 'opacity-0'}`} 
+        />
       )}
 
-      {!isVideo && callUI.remoteStream && (
+      {/* Voice call audio */}
+      {!isVideo && (
         <audio ref={remoteAudioRef} autoPlay playsInline />
       )}
 
@@ -79,11 +105,16 @@ export function CallOverlay({
           </>
         )}
 
-        {isVideo && callUI.localStream && (
+        {/* Local video - always render if video call to prevent unmount/remount flicker */}
+        {isVideo && (
           <video
             ref={localVideoRef}
-            autoPlay playsInline muted
-            className={`rounded-xl object-cover border-2 border-neutral-800 ${isActive ? 'absolute top-4 right-4 w-24 h-36' : 'w-32 h-48 mt-4'}`}
+            autoPlay 
+            playsInline 
+            muted
+            className={`rounded-xl object-cover border-2 border-neutral-800 transition-all ${
+              isActive ? 'absolute top-4 right-4 w-24 h-36' : 'w-32 h-48 mt-4'
+            } ${callUI.localStream ? 'opacity-100' : 'opacity-0'}`}
           />
         )}
       </div>
