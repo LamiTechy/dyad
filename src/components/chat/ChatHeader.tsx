@@ -5,7 +5,6 @@ import { formatDistanceToNow } from 'date-fns'
 import Link from 'next/link'
 import { getSupabaseBrowserClient } from '@/lib/supabase/client'
 import { PhoneIcon, VideoIcon, SearchIcon, SettingsIcon, PictureIcon, LockIcon } from '@/components/ui/Icons'
-import { MobileMenu } from './MobileMenu'
 import type { PresenceState } from '@/types/database'
 
 interface ChatHeaderProps {
@@ -195,7 +194,7 @@ export function ChatHeader({
       </div>
 
       <div className="flex items-center gap-1 shrink-0">
-        {/* Call buttons - always visible */}
+        {/* Call buttons */}
         <button
           onClick={onVoiceCall}
           className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
@@ -211,40 +210,30 @@ export function ChatHeader({
           <VideoIcon size={20} color="currentColor" />
         </button>
 
-        {/* Desktop action buttons - hidden on mobile */}
-        <div className="hidden md:flex items-center gap-1">
+        {/* Action buttons */}
+        <button
+          onClick={onSearchOpen}
+          className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
+          title="Search"
+        >
+          <SearchIcon size={20} color="currentColor" />
+        </button>
+        {onWallpaperOpen && (
           <button
-            onClick={onSearchOpen}
+            onClick={onWallpaperOpen}
             className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
-            title="Search"
+            title="Set wallpaper"
           >
-            <SearchIcon size={20} color="currentColor" />
+            <PictureIcon size={20} color="currentColor" />
           </button>
-          {onWallpaperOpen && (
-            <button
-              onClick={onWallpaperOpen}
-              className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
-              title="Set wallpaper"
-            >
-              <PictureIcon size={20} color="currentColor" />
-            </button>
-          )}
-          <Link
-            href="/setup"
-            className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
-            title="Settings"
-          >
-            <SettingsIcon size={20} color="currentColor" />
-          </Link>
-        </div>
-
-        {/* Mobile menu - hidden on desktop */}
-        <div className="md:hidden">
-          <MobileMenu
-            onSearchOpen={onSearchOpen}
-            onWallpaperOpen={onWallpaperOpen}
-          />
-        </div>
+        )}
+        <Link
+          href="/setup"
+          className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300"
+          title="Settings"
+        >
+          <SettingsIcon size={20} color="currentColor" />
+        </Link>
       </div>
     </header>
   )
