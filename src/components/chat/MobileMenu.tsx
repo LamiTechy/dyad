@@ -49,7 +49,7 @@ export function MobileMenu({
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-neutral-900 border border-neutral-800 rounded-lg shadow-lg z-50">
+        <div className="absolute right-0 mt-2 w-48 bg-neutral-900 border border-neutral-800 rounded-lg shadow-2xl z-[9999]">
           <button
             onClick={() => handleMenuItemClick(onSearchOpen)}
             className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors first:rounded-t-lg"
