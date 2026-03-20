@@ -17,6 +17,15 @@ export function MobileMenu({
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const [contentHeight, setContentHeight] = useState(0)
+
+  // Update content height when open state changes
+  useEffect(() => {
+    if (contentRef.current) {
+      setContentHeight(isOpen ? contentRef.current.scrollHeight : 0)
+    }
+  }, [isOpen])
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -39,6 +48,7 @@ export function MobileMenu({
 
   return (
     <div className="relative" ref={menuRef}>
+      {/* Menu toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="p-2 text-neutral-500 hover:text-pink-400 hover:bg-pink-500/10 rounded-full transition-all duration-300 relative z-10"
@@ -47,51 +57,61 @@ export function MobileMenu({
         {isOpen ? <X size={20} color="currentColor" /> : <MenuIcon size={20} color="currentColor" />}
       </button>
 
-      {/* Dropdown menu - context menu style */}
-      {isOpen && (
-        <div className="fixed right-4 top-16 w-40 bg-neutral-950 border border-neutral-700 rounded-md shadow-xl z-[99999] overflow-hidden">
+      {/* Accordion menu - slides down from button */}
+      <div
+        ref={contentRef}
+        style={{ 
+          maxHeight: `${contentHeight}px`,
+          overflow: 'hidden',
+          transition: 'max-height 0.3s ease-in-out'
+        }}
+        className="absolute right-0 top-full mt-1 w-48 bg-neutral-950 border border-neutral-700 rounded-md shadow-lg z-[99999]"
+      >
+        {/* Search */}
+        <button
+          onClick={() => handleMenuItemClick(onSearchOpen)}
+          className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors text-sm border-b border-neutral-800/50"
+          title="Search messages"
+        >
+          <SearchIcon size={18} color="currentColor" />
+          <span className="font-medium">Search</span>
+        </button>
+
+        {/* Wallpaper */}
+        {onWallpaperOpen && (
           <button
-            onClick={() => handleMenuItemClick(onSearchOpen)}
-            className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs"
-            title="Search messages"
+            onClick={() => handleMenuItemClick(onWallpaperOpen)}
+            className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors text-sm border-b border-neutral-800/50"
+            title="Set wallpaper"
           >
-            <SearchIcon size={16} color="currentColor" />
-            <span className="font-normal">Search</span>
+            <PictureIcon size={18} color="currentColor" />
+            <span className="font-medium">Wallpaper</span>
           </button>
+        )}
 
-          {onWallpaperOpen && (
-            <button
-              onClick={() => handleMenuItemClick(onWallpaperOpen)}
-              className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs border-t border-neutral-800"
-              title="Set wallpaper"
-            >
-              <PictureIcon size={16} color="currentColor" />
-              <span className="font-normal">Wallpaper</span>
-            </button>
-          )}
-
-          {onLockSettingsOpen && (
-            <button
-              onClick={() => handleMenuItemClick(onLockSettingsOpen)}
-              className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs border-t border-neutral-800"
-              title="Lock settings"
-            >
-              <LockIcon size={16} color="currentColor" />
-              <span className="font-normal">Lock</span>
-            </button>
-          )}
-
-          <Link
-            href="/setup"
-            onClick={() => setIsOpen(false)}
-            className="w-full px-3 py-2 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-2.5 transition-colors text-xs border-t border-neutral-800"
-            title="Settings"
+        {/* Lock settings */}
+        {onLockSettingsOpen && (
+          <button
+            onClick={() => handleMenuItemClick(onLockSettingsOpen)}
+            className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors text-sm border-b border-neutral-800/50"
+            title="Lock settings"
           >
-            <SettingsIcon size={16} color="currentColor" />
-            <span className="font-normal">Settings</span>
-          </Link>
-        </div>
-      )}
+            <LockIcon size={18} color="currentColor" />
+            <span className="font-medium">Lock</span>
+          </button>
+        )}
+
+        {/* Settings */}
+        <Link
+          href="/setup"
+          onClick={() => setIsOpen(false)}
+          className="w-full px-4 py-3 text-left text-neutral-300 hover:bg-neutral-800 hover:text-pink-400 flex items-center gap-3 transition-colors text-sm"
+          title="Settings"
+        >
+          <SettingsIcon size={18} color="currentColor" />
+          <span className="font-medium">Settings</span>
+        </Link>
+      </div>
     </div>
   )
 }
